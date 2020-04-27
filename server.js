@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+require("./models/db");
 const path = require('path');
 const userRoute = require('./routes/wish');//injecting code from shop.js
 const adminRoute = require('./routes/admin');//injecting code from admin.js

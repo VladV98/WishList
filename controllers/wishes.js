@@ -1,7 +1,7 @@
-const Wish = require('../models/wish');
+const mongoose = require('mongoose');
+const Wish = mongoose.model('Wish');
 
-exports.getAddWishesPage = 
-    (req, res) => {
+exports.getAddWishesPage = (req,res) =>{
     res.render('add-wish', {
         pageTitle: "Add New Wish",
         path: "/admin/add-wish"
@@ -9,20 +9,29 @@ exports.getAddWishesPage =
 }
 
 exports.postAddWishes = (req, res) => {
-    console.log(req.body.title);
-    //products.push({title: req.body.title});
-    const wish = new Wish(req.body.title);
-    wish.saveWish();
-    res.redirect('/');
+    let userInput = req.body.name;
+    let newWish = new Wish();
+    newWish.name = userInput;
+    newWish.save((error, response) => {
+        if(!error){
+            res.redirect('/');
+        } else {
+            console.log(error);            
+        }
+    });
 }
 
-exports.getWishes = (req, res) => {
-    
-    Wish.fetchAllWishes((wish)=>{
-        res.render('wish', {
-        pageTitle: 'Welcome to My Shop!',
-        wishes: wish,
-        path: '/'
-        });
-    })
+exports.getWishes = (req, res) => {    
+    Wish.find((error, wishes) => {
+        if(!error){
+            res.render('wish', 
+                {
+                    pageTitle: 'My Wishes',
+                    wishes: wishes,
+                    path: '/'
+                });
+        } else {
+            console.log("Failed to retrieve the data");
+        }
+    });  
 }
